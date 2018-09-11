@@ -59,6 +59,26 @@ class Model(object):
             if v == m.__dict__[k]:
                 ms.append(m)
         return ms
+    @classmethod
+    def find(cls,id):
+        return cls.find_by(id=id)
+
+    @classmethod
+    def delete(cls,id):
+        models = cls.all()
+        index= -1
+        for i,e in enumerate(models):
+            if e.id == id:
+                index = i
+                break
+        if index == -1:
+            pass
+        else:
+            models.pop(index)
+            l = [m.__dict__ for m in models]
+            path = cls.db_path()
+            save(l,path)
+            return
 
     def __repr__(self):
         """
