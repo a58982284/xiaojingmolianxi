@@ -1,7 +1,6 @@
-from utils import log
 from todo import Todo
 from models import User
-from routes import current_user
+from routes.routes import current_user
 
 def template(name):
     #根据名字读取 templates 文件夹里的一个文件并返回

@@ -3,10 +3,10 @@ import urllib.parse
 
 from utils import log
 
-from routes import route_static
-from routes import route_dict
+from routes.routes import route_static
+from routes.routes import route_dict
 
-from routes_todo import route_dict as todo_route
+from routes.routes_todo import route_dict as todo_route
 
 
 # 定义一个 class 用于保存请求的数据
