@@ -1,0 +1,325 @@
+13:42:07 完整请求
+13:42:07 请求结束
+13:42:07 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:42:07 path and query / {} 
+13:42:07 响应
+ HTTP/1.1 302 OK
+Content-Type: text/html
+Location: /todo/index
+
+
+13:42:07 完整请求
+13:42:07 请求结束
+13:42:07 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:42:07 path and query /todo/index {} 
+13:42:07 完整请求
+13:42:07 请求结束
+13:42:07 cookie ['']
+13:42:07 path and query /todo/index {} 
+13:47:33 完整请求
+13:47:33 请求结束
+13:47:33 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:47:33 path and query / {} 
+13:47:33 响应
+ HTTP/1.1 302 OK
+Content-Type: text/html
+Location: /todo/index
+
+
+13:47:33 完整请求
+13:47:33 请求结束
+13:47:33 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:47:33 path and query /todo/index {} 
+13:47:33 响应
+ HTTP/1.1 200 OK
+Content-Type: text/html
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>web10 todo ajax</title>
+    </head>
+    <body>
+        <input id='id-input-todo'>
+        <button id='id-button-add'>add</button>
+        <div class="todo-list">
+        </div>
+        <!-- 这是我们处理静态文件的套路 -->
+        <!-- gua.js 放了公共的函数 -->
+        <!-- 按顺序引入 2 个 js 文件, 后面的 js 文件就能使用前面的文件中的函数了 -->
+        <script src='/static?file=gua.js'></script>
+        <script src='/static?file=todo.js'></script>
+    </body>
+</html>
+13:47:33 完整请求
+13:47:33 请求结束
+13:47:33 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:47:33 path and query /static {'file': 'gua.js'} 
+13:47:33 响应
+ HTTP/1.1 200 OK
+
+var log = function () {
+    console.log.apply(console,arguments)
+}
+
+var e = function (sel) {
+    return document.querySelector(sel)
+}
+
+//ajax函数
+
+var ajax = function (method,path,data,respinseCallback) {
+    var r = new XMLHttpRequest()
+    r.open(method,path,true)
+    r.setRequestHeader('Content-Type','application/json')
+    r.onreadystatechange = function () {
+        if(r.readyState === 4){
+            respinseCallback(r.response)
+        }
+    }
+    // 把数据转换为 json 格式字符串
+    data = JSON.stringify(data)
+    // 发送请求
+    r.send(data)
+}
+
+// TODO API
+// 获取所有 todo
+var apiTodoAll = function (callback) {
+    var path = '/api/todo/all'
+    ajax('GET',path,'',callback)
+}
+
+//增加一个 todo
+var apiTodoAdd = function (form,callback) {
+    var path = '/api/todo/add'
+    ajax('GET',path,form,callback)
+}
+
+//删除一个 todo
+var apiTodoDelete = function (id,callback) {
+    var path = '/api/todo/delete?id=' + id
+    ajax('GET', path, '', callback)
+    //    get(path, callback)
+}
+
+//更新一个 todo
+var apiTodoUpdate = function (form,callback) {
+    var path = '/api/todo/update'
+    ajax('POST',path,form,callback)
+    // post(path,form,callback)
+}
+
+//load weibo all
+var apiWeiboAll = function (callback) {
+    var path = '/api/weibo/all'
+    ajax('GET',path,'',callback)
+}
+
+//增加一个 todo
+var apiWeiboAdd = function (form,callback) {
+    var path = '/api/weibo/add'
+    ajax('POST',path,form,callback)
+}
+13:47:34 完整请求
+13:47:34 请求结束
+13:47:34 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:47:34 path and query /static {'file': 'todo.js'} 
+13:47:34 响应
+ HTTP/1.1 200 OK
+
+var timeString = function (timestamp) {
+    t = new Date(timestamp*1000)
+    t = t.toLocaleTimeString()
+    return t
+}
+
+var todoTemplate = function (todo) {
+    var title = todo.title
+    var id = todo.id
+    var ut = timeString(todo.ut)
+    var t = `
+        <div class="todo-cell" id='todo-${id}' data-id="${id}">
+            <button class="todo-edit">编辑</button>
+            <button class="todo-delete">删除</button>
+            <span class="todo-title">${title}</span>
+            <time class="todo-ut">${ut}</time>
+</div>
+    `
+    return t
+}
+
+var insertTodo = function (todo) {
+    var todoCell = todoTemplate(todo)
+    //插入 todo-list
+    var todoList = e('.todo-list')
+    todoList.insertAdjacentHTML('beforeend',todoCell)
+}
+
+
+var insertEditForm = function (cell) {
+    var form = `
+        <div class="todo-edit-form">
+        <input class="todo-edit-input">
+        <button class="todo-update">更新</button>
+</div>
+    `
+    cell.insertAdjacentHTML('beforeend',form)
+}
+
+var loadTodos = function () {
+    //调用 ajax api载入数据
+    apiTodoAll(function (r) {
+        //解析为数组
+        var todos = JSON.parse(r)
+        //循环添加到页面中
+        for(var i = 0 ; i <todos.length;i++){
+            var todo = todo[i]
+            insertTodo(todo)
+        }
+    })
+}
+
+var bindEventTodoAdd = function() {
+    var b = e('#id-button-add')
+    // 注意, 第二个参数可以直接给出定义函数
+    b.addEventListener('click', function(){
+        var input = e('#id-input-todo')
+        var title = input.value
+        log('click add', title)
+        var form = {
+            'title': title,
+        }
+        apiTodoAdd(form, function(r) {
+            // 收到返回的数据, 插入到页面中
+            var todo = JSON.parse(r)
+            insertTodo(todo)
+        })
+    })
+}
+
+var bindEventTodoDelete = function() {
+    var todoList = e('.todo-list')
+    // 注意, 第二个参数可以直接给出定义函数
+    todoList.addEventListener('click', function(event){
+        var self = event.target
+        if(self.classList.contains('todo-delete')){
+            // 删除这个 todo
+            var todoCell = self.parentElement
+            var todo_id = todoCell.dataset.id
+            apiTodoDelete(todo_id, function(r){
+                log('删除成功', todo_id)
+                todoCell.remove()
+            })
+        }
+    })
+}
+var bindEventTodoEdit = function() {
+    var todoList = e('.todo-list')
+    // 注意, 第二个参数可以直接给出定义函数
+    todoList.addEventListener('click', function(event){
+        var self = event.target
+        if(self.classList.contains('todo-edit')){
+            // 删除这个 todo
+            var todoCell = self.parentElement
+            insertEditForm(todoCell)
+        }
+    })
+}
+
+var bindEventTodoUpdate = function() {
+    var todoList = e('.todo-list')
+    // 注意, 第二个参数可以直接给出定义函数
+    todoList.addEventListener('click', function(event){
+        var self = event.target
+        if(self.classList.contains('todo-update')){
+            log('点击了 update ')
+            //
+            var editForm = self.parentElement
+            // querySelector 是 DOM 元素的方法
+            // document.querySelector 中的 document 是所有元素的祖先元素
+            var input = editForm.querySelector('.todo-edit-input')
+            var title = input.value
+            // 用 closest 方法可以找到最近的直系父节点
+            var todoCell = self.closest('.todo-cell')
+            var todo_id = todoCell.dataset.id
+            var form = {
+                'id': todo_id,
+                'title': title,
+            }
+            apiTodoUpdate(form, function(r){
+                log('更新成功', todo_id)
+                var todo = JSON.parse(r)
+                var selector = '#todo-' + todo.id
+                var todoCell = e(selector)
+                var titleSpan = todoCell.querySelector('.todo-title')
+                titleSpan.innerHTML = todo.title
+//                todoCell.remove()
+            })
+        }
+    })
+}
+
+var bindEvents = function() {
+    bindEventTodoAdd()
+    bindEventTodoDelete()
+    bindEventTodoEdit()
+    bindEventTodoUpdate()
+}
+
+var __main = function() {
+    bindEvents()
+    loadTodos()
+}
+
+__main()
+13:47:34 完整请求
+13:47:34 请求结束
+13:47:34 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:47:34 path and query /api/todo/all {} 
+13:47:34 完整请求
+13:47:34 请求结束
+13:47:34 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:47:34 path and query /favicon.ico {} 
+13:47:34 响应
+ HTTP/1.1 404 NOT FOUND
+
+<h1>NOT FOUND</h1>
+13:47:35 完整请求
+13:47:35 请求结束
+13:47:35 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:47:35 path and query /api/todo/all {} 
+13:47:38 完整请求
+13:47:38 请求结束
+13:47:38 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:47:38 path and query /api/todo/add {} 
+13:48:00 完整请求
+13:48:00 请求结束
+13:48:00 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:48:00 path and query /api/todo/add {} 
+13:48:00 完整请求
+13:48:00 完整请求
+13:48:00 完整请求
+13:48:00 请求结束
+13:48:00 请求结束
+13:48:00 请求结束
+13:48:00 请求结束
+13:48:00 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:48:00 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:48:00 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:48:00 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:48:00 path and query /api/todo/add {} 
+13:48:00 path and query /api/todo/add {} 
+13:48:00 path and query /api/todo/add {} 
+13:48:00 path and query /api/todo/add {} 
+13:55:24 完整请求
+13:55:24 请求结束
+13:55:24 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:55:24 path and query /api/todo/add {} 
+13:55:34 完整请求
+13:55:34 请求结束
+13:55:34 完整请求
+13:55:34 请求结束
+13:55:34 cookie ['Pycharm-bdfc5fce=44e1e6e2-1007-463a-9c3d-891072768e2e']
+13:55:34 path and query /api/todo/add {} 
