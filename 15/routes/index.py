@@ -41,14 +41,14 @@ def index():
     return r
 
 
-@main.route("/register",method=['POST'])
+@main.route("/register",methods=['POST'])
 def register():
     form =request.form
     u = User.register(form)
     return redirect(url_for('.index'))
 
 
-@main.route("/login",method=['POST'])
+@main.route("/login",methods=['POST'])
 def login():
     form = request.form
     u = User.validate_login(form)

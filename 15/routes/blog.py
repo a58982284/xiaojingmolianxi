@@ -1,7 +1,6 @@
 from flask import (
     render_template,
     request,
-    request,
     redirect,
     url_for,
     Blueprint,
@@ -33,12 +32,12 @@ def add():
     Blog.new(form)
     return redirect(url_for('.index'))
 
-@main.route("/new",method=["GET"])
+@main.route("/new",methods=["GET"])
 def new():
     return render_template("blog_new.html")
 
 #/blog/1
-@main.route("/<int:blog_id>",method=["GET"])
+@main.route("/<int:blog_id>",methods=["GET"])
 def view(blog_id):
     comments = BlogComment.find_all(blog_id=blog_id)
     blog =Blog.find(blog_id)

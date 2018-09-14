@@ -1,0 +1,9 @@
+09:19:50 kwargs,  {'id': -1} <class 'dict'>
+09:20:11 kwargs,  {'username': 'liyi'} <class 'dict'>
+09:20:11 debug 3
+09:20:11 kwargs,  {'id': -1} <class 'dict'>
+09:20:16 kwargs,  {'username': 'liyi'} <class 'dict'>
+09:20:16 kwargs,  {'id': 4} <class 'dict'>
+09:23:31 debug 2
+09:24:01 debug 3
+09:24:01 debug 4
