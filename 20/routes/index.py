@@ -60,5 +60,67 @@ def login():
 
 @main.route("/profile")
 def profile():
-    pass
+    u= current_user()
+    if u is None:
+        return redirect(url_for('.index'))
+    else:
+        return render_template('profile.html',user=u)
+
+def allow_file(filename):
+    suffix = filename.split('.')[-1]
+    from config import accept_user_file_type
+    return suffix in accept_user_file_type
+
+@main.route('/addimg',methods=['POST'])
+def add_img():
+    u = current_user()
+
+    if u is None:
+        return redirect(url_for(".profile"))
+
+    if 'file' not in request.files:
+        return redirect(request.url)
+
+    file = request.files['file']
+    if file.filename =='':
+        return redirect(request.url)
+
+    if allow_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(user_file_director,filename))
+        u.user_image = filename
+        u.save()
+
+    return redirect(url_for(".profile"))
+
+@main.route("/uploads/<filename>")
+def uploads(filename):
+    return send_from_directory(user_file_director,filename)
+"""
+ Send a file from a given directory with :func:`send_file`.  This
+    is a secure way to quickly expose static files from an upload folder
+    or something similar.
+
+    Example usage::
+
+        @app.route('/uploads/<path:filename>')
+        def download_file(filename):
+            return send_from_directory(app.config['UPLOAD_FOLDER'],
+                                       filename, as_attachment=True)
+
+    .. admonition:: Sending files and Performance
+
+       It is strongly recommended to activate either ``X-Sendfile`` support in
+       your webserver or (if no authentication happens) to tell the webserver
+       to serve files for the given path on its own without calling into the
+       web application for improved performance.
+
+    .. versionadded:: 0.5
+
+    :param directory: the directory where all the files are stored.
+    :param filename: the filename relative to that directory to
+                     download.
+    :param options: optional keyword arguments that are directly
+                    forwarded to :func:`send_file`.
+    """
 
