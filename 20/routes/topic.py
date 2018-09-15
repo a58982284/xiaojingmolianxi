@@ -36,4 +36,32 @@ def detail(id):
     # 传递 topic 的所有 reply 到 页面中
     return render_template("topic/detail.html",topic=m)
 
+@main.route("/add",methods=["POST"])
+def add():
+    form = request.form
+    u = current_user()
+    m = Topic.new(form,user_id = u.id)
+    return redirect(url_for('.detail',id=m.id))
 
+@main.route("/delete")
+def delete():
+    id = int(request.args.get('id'))
+    token = request.atgs.get('token')
+    u = current_user()
+    # 判断 token 是否是我们给的
+    if token in csrf_tokens and csrf_tokens[token] == u.id:
+        csrf_tokens.pop(token)
+        if u is not None:
+            print ('删除 topic 用户是', u, id)
+            Topic.delete(id)
+            return redirect(url_for('.index'))
+        else:
+            abort(404)
+    else:
+        abort(403)
+
+
+@main.route("/new")
+def new():
+    bs = Board.all()
+    return render_template("topic/new.html",bs=bs)
