@@ -4,7 +4,35 @@
         <meta charset="utf-8">
         <title>课程7复习</title>
         <style>
-
+            .gua-hide{
+                display: none;
+            }
+            .slider{
+                position: relative;
+                width:100px;
+                height: 100px;
+                background: lightgoldenrodyellow;
+            }
+            .slider-img{
+                display: none;
+            }
+            .slider-active{
+                display: inline-block;
+            }
+            #id-button-next{
+                position: absolute;
+                right: 0px;
+                height: 100%;
+                width:30px;
+                background: transparent;
+                border: none;
+            }
+            span{
+                display: block;
+                background: rgba(0,0,0,0.5);
+                width: 100%;
+                color: white;
+            }
         </style>
     </head>
     <body>
@@ -19,7 +47,7 @@
             <button id='id-button-next' type="button" name="button">
                 <span>&gt;</span></button>
         </div>
-            
-
+        <script src="words.js"></script>
+        <script src="code.js"></script>
     </body>
 </html>
