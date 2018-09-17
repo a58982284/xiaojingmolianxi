@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>课程6复习</title>
+        <style>
+            .radio-button{
+                display: inline-block;
+                padding: 10px;
+                cursor: pointer;
+            }
+            .active{
+                background: red;
+            }
+            .mask{
+                position: fixed;
+                top:0px;
+                left: 0px;
+                z-index:100px;
+                width: 100%;
+                height: 100%;
+                background: black;
+                opacity: 0.0;
+            }
+            .mask-active{
+                opacity: 0.9;
+            }
+            .player{
+                position: relative;
+                background: white;
+                z-index: 101;
+            }
+            button{
+                z-index: 102;
+            }
+
+        </style>
+    </head>
+    <body>
+        <!-- 注意, 每个标签都有 class 和 id 这两个属性 -->
+        <!-- class 可以重复, id 不能重复 -->
+        <div class="login-form">
+            <input id="id-input-username" type="text" value="gua">
+            <br>
+            <input id="id-input-password" type="password" value="xiao">
+            <br>
+            <button id="id-button-login">登录按钮</button>
+        </div>
+
+         <!-- 这是一个选项卡的例子 -->
+         <div class="radio-control">
+              <!-- 可以设置多个 class, 用空格分开 -->
+              <span class="radio-button active">html</span>
+              <span class="radio-button">js</span>
+              <span class="radio-button">css</span>
+        </div>
+        <div class="mask">
+        </div>
+        <button id="id-button-light" name="button">开关灯</button>
+    <script>
+    var log = function{
+        console.log.apply(console,arguments);
+    }
+    log('代码开始')
+    //元素选择器
+    var body = document.querySelector('body')
+    //class 选择器,用的是 .类名
+    var form = document.querySelector('.login-form')
+    //id选择器,用的是#id
+    var loginButton = document.querySelector('#id-button-login')
+    //log
+    log('selector',body,form,loginButton)
+
+    var user = document.querySelector('#id-button-username')
+    var userValue = user.getAttribute('value')
+    log('user value',userValue)
+    log('没有的属性',user.getAttribute('不存在'))
+
+    //设置特定的属性值
+    user.setAttribute('value','新用户名')
+
+    log(user.hasAttributes())
+    log(user.hasAttributes('value'))
+
+    //user.setAttribute('value','新用户名')
+    user.removeAttribute('type')
+
+    var attributes = user.attributes
+    log('所有属性',attributes)
+
+    var button = document.createElement('button');
+    button.innerHTML = '注册用户'
+
+    var form = document.querySelector('.login-form')
+    form.appendChild(button)
+
+    var pwd = document.querySelector('#id-input-password')
+    //form.removeChild(pwd)
+    //pwd.remove()
+
+    //事件
+    //1.获得按钮
+    var loginButton = document.querySelector('#id-button-login')
+    // 2, 声明一个函数, 用于在按钮点击后执行
+    var clicked = function{
+        log('按钮被点击到了')
+    }
+    loginButton.addEventListener('click',clicked)
+
+    var buttons = document.querySelectorAll('.radio-button')
+    //循环遍历每个元素,并且绑定点击事件
+    for (var i = 0; i<buttons.length;i++){
+        var button = buttons[i]
+        button.addEventListener('click',function(event){
+            var self = event.target
+            clearActive()
+            self.classList.add('active')
+        })
+    }
+
+var clearActive =  function(){
+    var active = document.querySelectorAll('.active')
+    if (active != null){
+        active.classList.remove("active")
+    }
+}
+
+
+var toggle = function(element, cls) {
+    if (element.classList.contains(cls)) {
+        element.classList.remove(cls)
+    } else {
+        element.classList.add(cls)
+    }
+}
+
+var light = document.querySelectorAll('#id-button-light')
+
+var klgr = function(){
+    log('开关灯')
+    var mask = document.querySelectorAll('.mask')
+    toggle(mask,'mask-active')
+}
+
+light.addEventListener('click',klgr)
+
+
+
+
+
+
+
+    </script>
+
+
+    </body>
+</html>
